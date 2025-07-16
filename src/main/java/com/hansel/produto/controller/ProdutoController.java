@@ -1,5 +1,7 @@
 package com.hansel.produto.controller;
 
+import com.hansel.produto.dto.ProdutoRequestDTO;
+import com.hansel.produto.dto.ProdutoResponseDTO;
 import com.hansel.produto.model.Produto;
 import com.hansel.produto.repository.ProdutoRepository;
 import jakarta.validation.Valid;
@@ -17,34 +19,68 @@ public class ProdutoController {
     private ProdutoRepository produtoRepository;
 
     @PostMapping
-    public ResponseEntity<Produto> criar(@RequestBody @Valid Produto produto) {
+    public ResponseEntity<ProdutoResponseDTO> criar(@RequestBody @Valid ProdutoRequestDTO dto) {
+        Produto produto = new Produto();
+        produto.setNome(dto.getNome());
+        produto.setDescricao(dto.getDescricao());
+        produto.setPreco(dto.getPreco());
+
         Produto salvo = produtoRepository.save(produto);
-        return ResponseEntity.ok(salvo);
+
+        ProdutoResponseDTO response = new ProdutoResponseDTO(
+                salvo.getId(),
+                salvo.getNome(),
+                salvo.getDescricao(),
+                salvo.getPreco()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<Produto>> listar() {
+    public ResponseEntity<List<ProdutoResponseDTO>> listar() {
         List<Produto> produtos = produtoRepository.findAll();
-        return  ResponseEntity.ok(produtos);
+
+        List<ProdutoResponseDTO> dtos = produtos.stream()
+                .map(produto -> new ProdutoResponseDTO(
+                        produto.getId(),
+                        produto.getNome(),
+                        produto.getDescricao(),
+                        produto.getPreco()))
+                .toList();
+
+        return  ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ProdutoResponseDTO> buscarPorId(@PathVariable Long id) {
         return produtoRepository.findById(id)
-                .map(ResponseEntity::ok)
+                .map(produto -> ResponseEntity.ok(new ProdutoResponseDTO(
+                        produto.getId(),
+                        produto.getNome(),
+                        produto.getDescricao(),
+                        produto.getPreco())))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody Produto atualizado) {
+    public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable Long id, @RequestBody ProdutoRequestDTO dto) {
         return produtoRepository.findById(id)
                 .map(produto -> {
-                    produto.setNome(atualizado.getNome());
-                    produto.setDescricao(atualizado.getDescricao());
-                    produto.setPreco(atualizado.getPreco());
+                    produto.setNome(dto.getNome());
+                    produto.setDescricao(dto.getDescricao());
+                    produto.setPreco(dto.getPreco());
 
-                    Produto salvo = produtoRepository.save(produto);
-                    return ResponseEntity.ok(salvo);
+                    Produto atualizado = produtoRepository.save(produto);
+
+                    ProdutoResponseDTO response = new ProdutoResponseDTO(
+                            atualizado.getId(),
+                            atualizado.getNome(),
+                            atualizado.getDescricao(),
+                            atualizado.getPreco()
+                    );
+
+                    return ResponseEntity.ok(response);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
