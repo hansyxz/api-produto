@@ -23,10 +23,18 @@ public class Produto {
     @Size(min = 3, message = "A descrição deve ter no mínimo 3 caracteres")
     private String descricao;
 
+    @NotBlank(message = "A categoria é obrigatória!")
+    @Size(min = 3, max = 100, message = "A categoria deve ter entre 3 e 100 caracteres")
+    @Column(nullable = false)
+    private String categoria;
+
     @NotNull(message = "O preço é obrigatório")
     @Positive(message = "O preço deve ser maior que zero")
     @Column(nullable = false)
     private BigDecimal preco;
+
+    @Column(nullable = false)
+    private String imagemUrl;
 
     public Long getId() {
         return id;
@@ -52,11 +60,27 @@ public class Produto {
         this.descricao = descricao;
     }
 
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
     public BigDecimal getPreco() {
         return preco;
     }
 
     public void setPreco(BigDecimal preco) {
         this.preco = preco;
+    }
+
+    public String getImagemUrl() {
+        return imagemUrl;
+    }
+
+    public void setImagemUrl(String imagemUrl) {
+        this.imagemUrl = imagemUrl;
     }
 }

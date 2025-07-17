@@ -16,6 +16,10 @@ public class ProdutoRequestDTO {
     @Size(min = 3, message = "A descrição deve ter no mínimo 3 caracteres")
     private String descricao;
 
+    @NotBlank(message = "A categoria é obrigatória!")
+    @Size(min = 3, max = 100, message = "A categoria deve ter entre 3 e 100 caracteres")
+    private String categoria;
+
     @NotNull(message = "O preço é obrigatório")
     @Positive(message = "O preço deve ser maior que zero")
     private BigDecimal preco;
@@ -34,6 +38,14 @@ public class ProdutoRequestDTO {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 
     public BigDecimal getPreco() {

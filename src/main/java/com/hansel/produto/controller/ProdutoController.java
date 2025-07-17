@@ -23,7 +23,9 @@ public class ProdutoController {
         Produto produto = new Produto();
         produto.setNome(dto.getNome());
         produto.setDescricao(dto.getDescricao());
+        produto.setCategoria(dto.getCategoria());
         produto.setPreco(dto.getPreco());
+        produto.setImagemUrl("https://i.ibb.co/M5j3F7vQ/produto-image.jpg");
 
         Produto salvo = produtoRepository.save(produto);
 
@@ -31,7 +33,9 @@ public class ProdutoController {
                 salvo.getId(),
                 salvo.getNome(),
                 salvo.getDescricao(),
-                salvo.getPreco()
+                salvo.getCategoria(),
+                salvo.getPreco(),
+                salvo.getImagemUrl()
         );
 
         return ResponseEntity.ok(response);
@@ -46,7 +50,9 @@ public class ProdutoController {
                         produto.getId(),
                         produto.getNome(),
                         produto.getDescricao(),
-                        produto.getPreco()))
+                        produto.getCategoria(),
+                        produto.getPreco(),
+                        produto.getImagemUrl()))
                 .toList();
 
         return  ResponseEntity.ok(dtos);
@@ -59,7 +65,9 @@ public class ProdutoController {
                         produto.getId(),
                         produto.getNome(),
                         produto.getDescricao(),
-                        produto.getPreco())))
+                        produto.getCategoria(),
+                        produto.getPreco(),
+                        produto.getImagemUrl())))
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -69,6 +77,7 @@ public class ProdutoController {
                 .map(produto -> {
                     produto.setNome(dto.getNome());
                     produto.setDescricao(dto.getDescricao());
+                    produto.setCategoria(dto.getCategoria());
                     produto.setPreco(dto.getPreco());
 
                     Produto atualizado = produtoRepository.save(produto);
@@ -77,7 +86,9 @@ public class ProdutoController {
                             atualizado.getId(),
                             atualizado.getNome(),
                             atualizado.getDescricao(),
-                            atualizado.getPreco()
+                            atualizado.getCategoria(),
+                            atualizado.getPreco(),
+                            atualizado.getImagemUrl()
                     );
 
                     return ResponseEntity.ok(response);
