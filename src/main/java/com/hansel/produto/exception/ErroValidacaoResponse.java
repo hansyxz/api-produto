@@ -1,12 +1,13 @@
 package com.hansel.produto.exception;
 
 import java.util.List;
+import java.util.Map;
 
 public class ErroValidacaoResponse {
     private int status;
-    private List<ErroCampoDTO> erros;
+    private Map<String, String> erros;
 
-    public ErroValidacaoResponse(int status, List<ErroCampoDTO> erros) {
+    public ErroValidacaoResponse(int status, Map<String, String> erros) {
         this.status = status;
         this.erros = erros;
     }
@@ -15,15 +16,7 @@ public class ErroValidacaoResponse {
         return status;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public List<ErroCampoDTO> getErros() {
+    public Map<String, String> getErros() {
         return erros;
-    }
-
-    public void setErros(List<ErroCampoDTO> erros) {
-        this.erros = erros;
     }
 }
