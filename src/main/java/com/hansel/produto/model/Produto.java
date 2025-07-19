@@ -36,6 +36,16 @@ public class Produto {
     @Column(nullable = false)
     private String imagemUrl;
 
+    public Produto() {}
+
+    public Produto(String nome, String descricao, String categoria, BigDecimal preco) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.categoria = categoria;
+        this.preco = preco;
+        this.imagemUrl = "https://i.ibb.co/M5j3F7vQ/produto-image.jpg";
+    }
+
     public Long getId() {
         return id;
     }
