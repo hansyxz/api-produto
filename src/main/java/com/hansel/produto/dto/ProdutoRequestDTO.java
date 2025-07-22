@@ -15,21 +15,21 @@ public class ProdutoRequestDTO {
 
     @NotBlank(message = "O nome é obrigatório!")
     @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
-    @Schema(description = "Nome do produto", example = "Tênis")
+    @Schema(description = "Nome do produto", example = "Camiseta Estampada")
     private String nome;
 
     @Size(min = 3, message = "A descrição deve ter no mínimo 3 caracteres")
-    @Schema(description = "Descrição do produto", example = "Tênis esportivo")
+    @Schema(description = "Descrição do produto", example = "Camiseta de algodão")
     private String descricao;
 
     @NotBlank(message = "A categoria é obrigatória!")
     @Size(min = 3, max = 100, message = "A categoria deve ter entre 3 e 100 caracteres")
-    @Schema(description = "Categoria do produto", example = "Calçados")
+    @Schema(description = "Categoria do produto", example = "Roupas")
     private String categoria;
 
-    @Schema(description = "Preço unitário", example = "350.00")
     @NotNull(message = "O preço é obrigatório")
     @Positive(message = "O preço deve ser maior que zero")
+    @Schema(description = "Preço do produto", example = "59.90")
     private BigDecimal preco;
 
     public String getNome() {

@@ -53,14 +53,7 @@ public class ProdutoService {
 
                     Produto atualizado = produtoRepository.save(produto);
 
-                    return new ProdutoResponseDTO(
-                            atualizado.getId(),
-                            atualizado.getNome(),
-                            produto.getDescricao(),
-                            produto.getCategoria(),
-                            produto.getPreco(),
-                            produto.getImagemUrl()
-                    );
+                    return converterParaDTO(atualizado);
                 });
     }
 
