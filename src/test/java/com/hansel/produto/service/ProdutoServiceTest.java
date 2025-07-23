@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -55,5 +57,49 @@ public class ProdutoServiceTest {
         assertNotNull(response.getImagemUrl());
 
         verify(produtoRepository, times(1)).save(any(Produto.class));
+    }
+
+    @Test
+    void deveListarTodosProdutosComSucesso() {
+
+        Produto produto1 = new Produto("Produto 1", "Descricao 1", "Categoria A", BigDecimal.valueOf(100));
+        produto1.setId(1L);
+
+        Produto produto2 = new Produto("Produto 2", "Descricao 2", "Categoria B", BigDecimal.valueOf(200));
+        produto2.setId(2L);
+
+        List<Produto> produtos = List.of(produto1, produto2);
+
+        when(produtoRepository.findAll()).thenReturn(produtos);
+
+        List<ProdutoResponseDTO> response = produtoService.listarTodosProdutos();
+
+        assertEquals(2, response.size());
+        assertEquals("Produto 1", response.get(0).getNome());
+        assertEquals("Produto 2", response.get(1).getNome());
+
+        verify(produtoRepository, times(1)).findAll();
+    }
+
+    @Test
+    void deveBuscarProdutoPorIdExistente() {
+
+        Produto produto = new Produto("Produto 1", "Descricao 1", "Categoria A", BigDecimal.valueOf(100));
+        produto.setId(1L);
+
+        when(produtoRepository.findById(produto.getId())).thenReturn(Optional.of(produto));
+
+        Optional<ProdutoResponseDTO> response = produtoService.buscarProdutoPorId(produto.getId());
+
+        assertTrue(response.isPresent(), "ProdutoResponseDTO deveria estar presente");
+
+        ProdutoResponseDTO dto = response.get();
+
+        verify(produtoRepository, times(1)).findById(produto.getId());
+        assertEquals(produto.getNome(), dto.getNome());
+        assertEquals(produto.getDescricao(), dto.getDescricao());
+        assertEquals(produto.getCategoria(), dto.getCategoria());
+        assertEquals(produto.getPreco(), dto.getPreco());
+        assertNotNull(dto.getImagemUrl());
     }
 }
