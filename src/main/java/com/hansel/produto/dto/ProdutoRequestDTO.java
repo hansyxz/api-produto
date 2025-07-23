@@ -32,6 +32,13 @@ public class ProdutoRequestDTO {
     @Schema(description = "Preço do produto", example = "59.90")
     private BigDecimal preco;
 
+    public ProdutoRequestDTO(String nome, String descricao, String categoria, BigDecimal preco) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.categoria = categoria;
+        this.preco = preco;
+    }
+
     public String getNome() {
         return nome;
     }
