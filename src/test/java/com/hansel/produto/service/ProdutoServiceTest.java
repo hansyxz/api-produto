@@ -102,4 +102,30 @@ public class ProdutoServiceTest {
         assertEquals(produto.getPreco(), dto.getPreco());
         assertNotNull(dto.getImagemUrl());
     }
+
+    @Test
+    void deveAtualizarProdutoComSucesso() {
+
+        Produto produto = new Produto("Produto 1", "Descricao 1", "Categoria A", BigDecimal.valueOf(100));
+        produto.setId(1L);
+
+        ProdutoRequestDTO produtoAtualizado = new ProdutoRequestDTO("Produto 1", "Descricao 2", "Categoria B", BigDecimal.valueOf(200));
+
+        when(produtoRepository.findById(produto.getId())).thenReturn(Optional.of(produto));
+        when(produtoRepository.save(any(Produto.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Optional<ProdutoResponseDTO> response = produtoService.atualizarProduto(produto.getId(), produtoAtualizado);
+
+        assertTrue(response.isPresent(), "ProdutoResponseDTO deveria estar presente");
+
+        ProdutoResponseDTO dto = response.get();
+
+        verify(produtoRepository, times(1)).findById(produto.getId());
+        assertEquals(produtoAtualizado.getNome(), dto.getNome());
+        assertEquals(produtoAtualizado.getDescricao(), dto.getDescricao());
+        assertEquals(produtoAtualizado.getCategoria(), dto.getCategoria());
+        assertEquals(produtoAtualizado.getPreco(), dto.getPreco());
+        assertNotNull(dto.getImagemUrl());
+    }
 }
