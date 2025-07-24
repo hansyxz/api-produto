@@ -104,6 +104,18 @@ public class ProdutoServiceTest {
     }
 
     @Test
+    void deveRetornarVazioAoBuscarProdutoPorIdInexistente() {
+
+        Long idInexistente = 10L;
+
+        when(produtoRepository.findById(idInexistente)).thenReturn(Optional.empty());
+
+        Optional<ProdutoResponseDTO> response = produtoService.buscarProdutoPorId(idInexistente);
+
+        assertTrue(response.isEmpty(), "Deveria retornar Optional.empty() ao busca um produto inexistente");
+    }
+
+    @Test
     void deveAtualizarProdutoComSucesso() {
 
         Produto produto = new Produto("Produto 1", "Descricao 1", "Categoria A", BigDecimal.valueOf(100));
@@ -127,5 +139,18 @@ public class ProdutoServiceTest {
         assertEquals(produtoAtualizado.getCategoria(), dto.getCategoria());
         assertEquals(produtoAtualizado.getPreco(), dto.getPreco());
         assertNotNull(dto.getImagemUrl());
+    }
+
+    @Test
+    void deveRetornarVazioAoAtualizarProdutoComIdInexistente() {
+
+        Long idInexistente = 10L;
+        ProdutoRequestDTO produtoAtualizado = new ProdutoRequestDTO("Produto 1", "Descricao 2", "Categoria B", BigDecimal.valueOf(200));
+
+        when(produtoRepository.findById(idInexistente)).thenReturn(Optional.empty());
+
+        Optional<ProdutoResponseDTO> response = produtoService.atualizarProduto(idInexistente, produtoAtualizado);
+
+        assertTrue(response.isEmpty(), "Deveria retornar Optional.empty() ao atualizar um produto inexistente");
     }
 }
