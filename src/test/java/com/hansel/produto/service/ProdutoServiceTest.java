@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -152,5 +153,36 @@ public class ProdutoServiceTest {
         Optional<ProdutoResponseDTO> response = produtoService.atualizarProduto(idInexistente, produtoAtualizado);
 
         assertTrue(response.isEmpty(), "Deveria retornar Optional.empty() ao atualizar um produto inexistente");
+    }
+
+    @Test
+    void deveDeletarProdutoComSucesso() {
+
+        Produto produto = new Produto("Produto 1", "Descricao 1", "Categoria A", BigDecimal.valueOf(100));
+        produto.setId(1L);
+
+        when(produtoRepository.findById(produto.getId())).thenReturn(Optional.of(produto));
+
+        ResponseEntity<Object> response = produtoService.deletarProduto(produto.getId());
+
+        verify(produtoRepository, times(1)).findById(produto.getId());
+        verify(produtoRepository, times(1)).delete(produto);
+
+        assertEquals(204, response.getStatusCode().value());
+    }
+
+    @Test
+    void deveRetornarNotFoundAoDeletarProdutoComIdInexistente() {
+        Long idInexistente = 10L;
+
+        when(produtoRepository.findById(idInexistente)).thenReturn(Optional.empty());
+
+        ResponseEntity<Object> response = produtoService.deletarProduto(idInexistente);
+
+        verify(produtoRepository, times(1)).findById(idInexistente);
+
+        verify(produtoRepository, never()).delete(any());
+
+        assertEquals(404, response.getStatusCode().value());
     }
 }
